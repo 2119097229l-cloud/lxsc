@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>幸运四收益计算器</title>
+  <style>
+    /* === 渐变背景：淡绿 → 淡青 → 淡蓝 === */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      color: #333;
+      background: linear-gradient(135deg, #e8f5e9, #e0f7fa, #f0f8ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 30px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 620px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      padding: 30px;
+      position: relative;
+      z-index: 10;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 22px;
+      color: #2c3e50;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #444;
+      font-size: 14px;
+    }
+
+    input[type="number"] {
+      width: 95%;
+      padding: 12px 14px;
+      border: 2px solid #cfd8dc;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4a90e2;
+    }
+
+    .readonly-display {
+      background-color: #f8fafc;
+      color: #555;
+      padding: 12px 14px;
+      border: 2px dashed #cbd5e0;
+      border-radius: 10px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .checkbox-group {
+      margin: 22px 0;
+    }
+
+    .checkbox-group label {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 20px;
+      margin-bottom: 10px;
+      font-weight: normal;
+      cursor: pointer;
+      font-size: 15px;
+      color: #4a5568;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #resetBtn {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    #historyToggle {
+      background-color: #e0f2fe;
+      color: #0891b2;
+      margin-top: 10px;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f9fbfd;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .result p {
+      margin: 10px 0;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #2b6cb0;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px dashed #cbd5e0;
+      margin: 16px 0;
+    }
+
+    .section-title {
+      font-weight: 600;
+      color: #2d3748;
+      margin-top: 12px;
+      display: block;
+    }
+
+    #historyList {
+      margin-top: 20px;
+      display: none;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-header {
+      font-weight: bold;
+      color: #0c4a6e;
+      margin-bottom: 4px;
+    }
+
+    .history-content {
+      font-size: 14px;
+      color: #334155;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>幸运四收益计算器</h2>
+
+    <div class="input-group">
+      <label for="orderAmount">订单金额（元）：</label>
+      <input type="number" id="orderAmount" placeholder="例如：100" step="0.01" min="0">
+    </div>
+
+    <div class="input-group">
+      <label for="realPay">实付金额（元）：</label>
+      <input type="number" id="realPay" placeholder="例如：80" step="0.01" min="0">
+    </div>
+
+    <div class="input-group">
+      <label>消费券金额（元）<small style="color:#718096; font-weight:normal;">（自动计算 = 订单金额 - 实付金额）</small>：</label>
+      <div class="readonly-display" id="couponDisplay">0.00 元</div>
+    </div>
+
+    <!-- ✅ 积分平落选项 -->
+    <div class="input-group">
+      <label>中奖者积分是否含平落奖励：</label>
+      <div style="display:flex; gap:16px; margin-top:8px;">
+        <label style="display:inline-flex; align-items:center; cursor:pointer;">
+          <input type="radio" name="pointMode" value="no" checked> 不含积分平落
+        </label>
+        <label style="display:inline-flex; align-items:center; cursor:pointer;">
+          <input type="radio" name="pointMode" value="yes"> 含积分平落（+10%）
+        </label>
+      </div>
+    </div>
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="selectAll"> 全选粉丝</label>
+      <br><br>
+      <label><input type="checkbox" id="fan1"> 1个粉丝参与</label>
+      <label><input type="checkbox" id="fan2"> 2个粉丝参与</label>
+      <br>
+      <label><input type="checkbox" id="fan3"> 3个粉丝参与</label>
+      <label><input type="checkbox" id="fan4"> 4个粉丝参与</label>
+    </div>
+
+    <div class="button-group">
+      <button id="resetBtn">重置</button>
+    </div>
+
+    <button id="historyToggle">查看历史记录</button>
+
+    <div class="result" id="result">
+      <p>请填写订单金额和实付金额，并选择参与的粉丝数量。</p>
+    </div>
+
+    <div id="historyList"></div>
+  </div>
+
+  <script>
+  // 获取元素
+  const orderInput = document.getElementById('orderAmount');
+  const realPayInput = document.getElementById('realPay');
+  const couponDisplay = document.getElementById('couponDisplay');
+  const selectAllCheckbox = document.getElementById('selectAll');
+  const fanCheckboxes = [
+    document.getElementById('fan1'),
+    document.getElementById('fan2'),
+    document.getElementById('fan3'),
+    document.getElementById('fan4')
+  ];
+  const resetBtn = document.getElementById('resetBtn');
+  const historyToggle = document.getElementById('historyToggle');
+  const historyList = document.getElementById('historyList');
+  const resultDiv = document.getElementById('result');
+  const pointModeRadios = document.querySelectorAll('input[name="pointMode"]');
+
+  let history = [];
+
+  // 所有输入监听
+  const allInputs = [orderInput, realPayInput, ...fanCheckboxes];
+  allInputs.forEach(el => el.addEventListener('input', calculate));
+  pointModeRadios.forEach(radio => radio.addEventListener('change', calculate));
+
+  // 全选逻辑
+  selectAllCheckbox.addEventListener('change', () => {
+    fanCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+    calculate();
+  });
+
+  fanCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const allChecked = fanCheckboxes.every(c => c.checked);
+      const anyChecked = fanCheckboxes.some(c => c.checked);
+      selectAllCheckbox.checked = allChecked;
+      selectAllCheckbox.indeterminate = anyChecked && !allChecked;
+      calculate();
+    });
+  });
+
+  // 重置
+  resetBtn.addEventListener('click', () => {
+    orderInput.value = '';
+    realPayInput.value = '';
+    couponDisplay.textContent = '0.000000 元';
+    selectAllCheckbox.checked = false;
+    fanCheckboxes.forEach(cb => cb.checked = false);
+    document.querySelector('input[name="pointMode"][value="no"]').checked = true;
+    resultDiv.innerHTML = '<p>请填写订单金额和实付金额，并选择参与的粉丝数量。</p>';
+    updateHistoryUI();
+  });
+
+  // 历史记录切换
+  historyToggle.addEventListener('click', () => {
+    historyList.style.display = historyList.style.display === 'block' ? 'none' : 'block';
+    historyToggle.textContent = historyList.style.display === 'block' ? '隐藏历史记录' : '查看历史记录';
+  });
+
+  // 高精度保留6位小数的辅助函数
+  function toFixed6(num) {
+    return Number(num.toFixed(10)).toFixed(6);
+  }
+
+  // 核心计算函数
+  function calculate() {
+    const order = parseFloat(orderInput.value) || 0;
+    const realPay = parseFloat(realPayInput.value) || 0;
+    const coupon = Math.max(0, order - realPay);
+    couponDisplay.textContent = toFixed6(coupon) + ' 元';
+
+    const selectedFans = [];
+    fanCheckboxes.forEach((cb, i) => {
+      if (cb.checked) selectedFans.push(i + 1);
+    });
+
+    const pointMode = document.querySelector('input[name="pointMode"]:checked').value;
+
+    if (order <= 0 || realPay < 0 || selectedFans.length === 0) {
+      resultDiv.innerHTML = '<p>请填写有效的订单金额、实付金额，并选择参与的粉丝数量。</p>';
+      return;
+    }
+
+    // 基础中奖积分（按原逻辑，但保留6位）
+    const baseWinnerPoints = realPay * 0.1125 + coupon * 0.1125 * 0.2;
+    const winnerPoints = pointMode === 'yes' ? baseWinnerPoints * 1.1 : baseWinnerPoints;
+    const loserCoupon = order * 0.0375; // 注意：已改为 order
+
+    let html = `
+      <p>中奖者获得积分：<span class="highlight">${toFixed6(winnerPoints)}</span></p>
+      <p>未中奖者获得消费券：<span class="highlight">${toFixed6(loserCoupon)}</span> 元</p>
+    `;
+
+    selectedFans.forEach(n => {
+      const merchantCoupon = order * 0.0075 * n;
+      let captainReward = order * 0.00225 * n;
+      let chiefReward = order * 0.0015 * n;
+
+      if (pointMode === 'yes') {
+        captainReward *= 1.1;
+        chiefReward *= 1.1;
+      }
+
+      html += `
+        <hr>
+        <span class="section-title">${n}个粉丝参与时：</span>
+        <p>商家获得消费券：<span class="highlight">${toFixed6(merchantCoupon)}</span> 元</p>
+        <p>队长（市场专员）奖励：<span class="highlight">${toFixed6(captainReward)}</span> 元</p>
+        <p>总队长（区域服务商）奖励：<span class="highlight">${toFixed6(chiefReward)}</span> 元</p>
+      `;
+    });
+
+    resultDiv.innerHTML = html;
+
+    // 保存历史（去重）
+    const key = `${order}-${realPay}-${selectedFans.join(',')}-${pointMode}`;
+    if (!history.some(h => h.key === key)) {
+      history.unshift({
+        key,
+        time: new Date().toLocaleTimeString(),
+        order,
+        realPay,
+        coupon,
+        fans: [...selectedFans],
+        pointMode,
+        summary: `订单:${toFixed6(order)}元, 实付:${toFixed6(realPay)}元, 粉丝:${selectedFans.join(',')}人, 平落:${pointMode === 'yes' ? '是' : '否'}`
+      });
+      if (history.length > 10) history.pop();
+      updateHistoryUI();
+    }
+  }
+
+  function updateHistoryUI() {
+    historyList.innerHTML = '';
+    if (history.length === 0) {
+      historyList.innerHTML = '<p style="color:#64748b;text-align:center;">暂无历史记录</p>';
+      return;
+    }
+    history.forEach(item => {
+      const basePoint = item.realPay * 0.1125 + item.coupon * 0.1125 * 0.2;
+      const finalPoint = item.pointMode === 'yes' ? basePoint * 1.1 : basePoint;
+      const merchantExample = (item.order * 0.0075) * item.fans[0];
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `
+        <div class="history-header">[${item.time}] ${item.summary}</div>
+        <div class="history-content">中奖积分: ${toFixed6(finalPoint)} | 商家券(×${item.fans[0]}): ${toFixed6(merchantExample)}</div>
+      `;
+      historyList.appendChild(div);
+    });
+  }
+
+  updateHistoryUI();
+</script>
+
+</body>
+
+</html>
