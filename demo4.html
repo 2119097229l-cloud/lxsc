@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // let workmates = [
+        //     { name: "唐奇帅", gender: "男" },
+        //     { name: "李德雨", gender: "男" },
+        //     {
+        //         name: "刘冬越",
+        //         gender: "男",
+        //         add: function (a, b) {
+        //             console.log(a + b + this.name);
+        //         }
+        //     }
+
+        // ]
+        // for (let i = 0; i < workmates.length; i++) {
+        //     console.log(workmates[i].name + "\t" + workmates[i].gender);
+        // }
+        // for (let key in workmates) {
+        //     console.log(key, workmates[key]);
+        // }
+        // workmates[2].add(35, 55);
+        function jisuan(arr) {
+            let sum = 0;
+            for (let i = 0; i < arr.length; i++) {
+                sum += arr[i].money;
+
+            }
+            return sum;
+        }
+        let list = [
+            { name: "lala", money: 3 },
+            { name: "xixi", money: 7 }
+        ];
+        console.log(jisuan(list));
+        console.log(list[0]);
+    </script>
+</body>
+
+</html>

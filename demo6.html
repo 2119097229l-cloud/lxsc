@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // let deyu = {
+        //     name: "德雨",
+        //     gender: "男"
+        // }
+        // // let name = deyu.name;
+        // // let gender = deyu.gender;
+        // // let { name: name1, gender: gender1 } = deyu;
+        // // console.log(name1, gender1);
+        // // let arr = [1, 2, 3];
+        // // // let a = arr[0];
+        // // // let b = arr[1];
+        // // let [, a, b] = arr;
+        // // console.log(a, b);
+        // let student = [
+        //     { name: "张三", gender: "男" },
+        //     { name: "李四", gender: "女" }
+        // ]
+        // let [{ gender: a }, { gender: b }] = student;
+        // let [{ name: c }, { name: d }] = student;
+        // // console.log(a, b);
+        // // console.log(c, d);
+        // // print = ({ a, b }) => console.log(a, b);
+        // // print({ a: "name", b: "age" });
+
+        // // print = (user) => console.log(user.name, user.gender);
+        // // print(deyu);
+        // print = ({ name, gender }) => console.log(name, gender);
+        // print({ name, gender }) = deyu;
+        let deyu = {
+            name: "德雨",
+            gender: "nv"
+        };
+
+        let student = [
+            { name: "张三", gender: "男" },
+            { name: "李四", gender: "女" }
+        ];
+
+        // 从student解构出第一个学生的name和gender
+        let [{ }, { name: stuName, gender: stuGender }] = student;
+        let { name, gender } = deyu;
+
+        // 正确定义print：对象解构参数
+        print = ({ a, b }) => console.log(a, b);
+
+        // 调用print，传入已定义的变量
+        print({ a: stuName, b: gender }); // 输出：张三 男
+
+    </script>
+</body>
+
+</html>

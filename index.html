@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理系统</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="layout">
+  <!-- 左侧菜单 -->
+  <aside class="sidebar">
+    <div class="logo">析引力管理系统</div>
+    <ul class="menu">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">角色&奖励</a></li>
+      <li><a href="#">门店管理</a></li>
+      <li><a href="#" class="active">商家入驻</a></li>
+      <!-- 其他菜单项 -->
+    </ul>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <!-- 面包屑 -->
+    <nav class="breadcrumb">
+      <a href="#">首页</a> / 
+      <a href="#">门店管理</a> / 
+      <span>商家入驻</span>
+    </nav>
+
+    <!-- 搜索区 -->
+    <section class="search-section">
+      <form class="search-form">
+        <input type="text" placeholder="ID" />
+        <input type="text" placeholder="申请会员ID" />
+        <input type="text" placeholder="姓名" />
+        <input type="text" placeholder="手机号" />
+        <select><option>请选择审核状态</option></select>
+        <select><option>请选择微信认证</option></select>
+        <select><option>请选择支付宝认证</option></select>
+        <select><option>请选择支付渠道</option></select>
+        <button type="submit">搜索</button>
+        <button type="reset">重置</button>
+      </form>
+    </section>
+
+    <!-- 表格区 -->
+    <section class="table-section">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>申请时间</th>
+            <th>会员信息</th>
+            <th>门店申请信息</th>
+            <th>流程状态</th>
+            <th>认证状态</th>
+            <th>进件类型</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5309</td>
+            <td>2025-12-11 13:29:12</td>
+            <td>
+              <img src="avatar.jpg" alt="" class="avatar" />
+              <div>ID:47901</div>
+              <div>聪慧家政 ~ 招聘 培训机构</div>
+            </td>
+            <td>
+              <div>姓名：王颖</div>
+              <div>手机号：186****7732</div>
+              <div>门店名称：聪慧家政</div>
+              <div>所在省市：安徽省 马鞍山市</div>
+              <div>所属分类：生活服务</div>
+            </td>
+            <td><span class="status pending">待商家签约</span></td>
+            <td style="width:300px; height:200px;">
+              <span class="status fail">未签约</span><br/>
+              <button class="btn-link">微信认证查询</button><br/>
+              <button class="btn-link">支付宝认证查询</button>
+            </td>
+            <td><span class="badge">汇付</span></td>
+            <td>
+              <button class="btn-link">查看详情</button><br/>
+              <button class="btn-link">通过审核</button><br/>
+              <button class="btn-link">发送消息</button>
+            </td>
+          </tr>
+          <!-- 更多行... -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 分页 -->
+    <footer class="pagination">
+      <span>共 3050 条</span>
+      <span>10条/页</span>
+      <button class="page-btn">&lt;</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <span>...</span>
+      <button class="page-btn">305</button>
+      <button class="page-btn">&gt;</button>
+      <span>前往：</span>
+      <input type="number" value="1" min="1" max="305" />
+      <span>页</span>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>
